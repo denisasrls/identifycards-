@@ -43,7 +43,7 @@ Mulțumim că utilizezi **identifycards**! Sperăm să ai o experiență plăcut
 
 **Contactează-ne:**
 
-- Discord: [symbol]([mailto:support@identitycards.com](https://discord.gg/symbol))
+- Discord: [symbol](https://discord.gg/symbol)
 - Website: [identifycards](https://identifycards.vercel.app)
 
 ---
