@@ -31,12 +31,21 @@
 
 ---
 
-## 🌟 **Faq**
+## ⚠️ **Avertisment**
 
-Site ul nostru se poate actualiza mereu asa ca salvati va cardul de fiecare data cand il incepeti
+Acest site poate fi actualizat frecvent, așadar asigură-te că salvezi cardurile tale în mod regulat pentru a evita pierderea datelor.
 
 ---
 
-## ⚠️ **Avertisment**
+Mulțumim că utilizezi **identifycards**! Sperăm să ai o experiență plăcută și productivă. Pentru orice întrebări sau sugestii, nu ezita să ne contactezi.
 
-Acest site poate fi actualizat frecvent, așadar as
+---
+
+**Contactează-ne:**
+
+- Discord: [symbol]([mailto:support@identitycards.com](https://discord.gg/symbol))
+- Website: [identifycards](https://identifycards.vercel.app)
+
+---
+
+Made with ❤️ by the denisaSRL
