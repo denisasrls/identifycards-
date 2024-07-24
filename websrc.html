@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identitycards.com</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000428, #004e92);
+            background-size: 200% 200%;
+            animation: gradient 8s ease infinite;
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .card {
+            background: #2c2f33;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.7);
+            transform: translateY(-5px);
+            background: #3e4347;
+        }
+
+        .card h2 {
+            color: #f1c40f;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f1c40f;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .card p {
+            margin: 8px 0;
+            color: #ccc;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .card input[type="date"], .card input[type="email"], .card input[type="text"], .card select {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #666;
+            border-radius: 5px;
+            background: #444;
+            color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-size: 0.9em;
+        }
+
+        .card .actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid #444;
+        }
+
+        .card .actions button {
+            width: 100px;
+            height: 40px;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+        }
+
+        .card .actions .save-button {
+            background-color: #27ae60;
+        }
+
+        .card .actions .remove-button {
+            background-color: #e74c3c;
+        }
+
+        .add-button {
+            background-color: #3498db;
+            width: 60px;
+            height: 60px;
+            font-size: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-button:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+
+        .warning-overlay, .incomplete-card-warning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .warning-overlay.active, .incomplete-card-warning.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .warning-box, .incomplete-card-warning-box {
+            background: #f39c12;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .incomplete-card-warning-box {
+            background: #e74c3c;
+        }
+
+        .warning-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #333;
+            color: #f1c40f;
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            font-size: 0.9em;
+            z-index: 1000;
+            text-align: center;
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            }
+        }
+
+        .visitor-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="add-button" onclick="addCard()">+</button>
+        <div class="card-container" id="card-container"></div>
+    </div>
+
+    <div class="warning-overlay" id="warning-overlay">
+        <div class="warning-box">⚠️ Ai deja un card incomplet</div>
+    </div>
+
+    <div class="incomplete-card-warning" id="incomplete-card-warning">
+        <div class="incomplete-card-warning-box">⚠️ Completează toate casetele</div>
+    </div>
+
+    <div class="visitor-counter" id="visitor-counter">
+        Visitors: 0
+    </div>
+
+    <script>
+        let inactivityTimeout;
+        let cooldown = false;
+        let currentCard = null;
+
+        function addCard() {
+            if (cooldown) {
+                showWarning('warning-overlay');
+                return;
+            }
+
+            if (isAnyCardIncomplete()) {
+                showWarning('warning-overlay');
+                return;
+            }
+
+            const cardContainer = document.getElementById('card-container');
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <h2 contenteditable="true" oninput="updateCardTitle(this)" onkeydown="return preventDelete(event)">Name:</h2>
+                <p><strong>Locatie:</strong> <select class="location-select">
+                    <option value="" disabled selected>selecteaza locatia</option>
+                    <option value="București">București</option>
+                    <option value="Cluj-Napoca">Cluj-Napoca</option>
+                    <option value="Brașov">Brașov</option>
+                    <option value="Iași">Iași</option>
+                    <option value="Timișoara">Timișoara</option>
+                    <option value="Constanța">Constanța</option>
+                    <option value="Sibiu">Sibiu</option>
+                    <option value="Arad">Arad</option>
+                    <option value="Ploiești">Ploiești</option>
+                    <option value="Oradea">Oradea</option>
+                    <option value="Bacău">Bacău</option>
+                    <option value="Brăila">Brăila</option>
+                    <option value="Buzău">Buzău</option>
+                    <option value="Craiova">Craiova</option>
+                    <option value="Satu Mare">Satu Mare</option>
+                    <option value="Suceava">Suceava</option>
+                    <option value="Vaslui">Vaslui</option>
+                </select></p>
+                <p><strong>Data nasteri:</strong> <input type="date" class="date-input"></p>
+                <p><strong>Aparitie:</strong> <input type="date" class="date-input"></p>
+                <p><strong>Mail:</strong> <input type="email" class="email-input" placeholder="mata@gmail.com"></p>
+                <p><strong>Ocupatie:</strong> <input type="text" class="text-input" placeholder="ocupate"></p>
+                <p><strong>Informatii:</strong> <input type="text" class="text-input" placeholder="informatii"></p>
+                <p><strong>Varsta:</strong> <select class="age-select">
+                    <option value="" disabled selected>alege varsta</option>
+                    ${Array.from({ length: 36 }, (_, i) => `<option value="${i + 5}">${i + 5}</option>`).join('')}
+                </select></p>
+                <p><strong>Aplicatie frecventata:</strong> <input type="text" class="text-input" placeholder="aplicatia"></p>
+                <div class="actions">
+                    <button class="save-button" onclick="saveCard(this)">Save</button>
+                    <button class="remove-button" onclick="removeCard(this)">🗑️</button>
+                </div>
+            `;
+
+            cardContainer.appendChild(card);
+            currentCard = card;
+            resetInactivityTimer();
+        }
+
+        function removeCard(button) {
+            const card = button.closest('.card');
+            card.remove();
+            if (currentCard === card) {
+                currentCard = null;
+            }
+        }
+
+        function saveCard(button) {
+            const card = button.closest('.card');
+            if (isCardIncomplete(card)) {
+                showWarning('incomplete-card-warning');
+                return;
+            }
+            const cardDetails = Array.from(card.querySelectorAll('p')).map(p => {
+                const input = p.querySelector('input');
+                const select = p.querySelector('select');
+                return `${p.querySelector('strong').innerText} ${input ? input.value : select ? select.options[select.selectedIndex].text : p.querySelector('span').innerText.trim()}`;
+            });
+
+            const cardData = `
+<identifycard logs>
+  ${cardDetails.join('\n  ')}
+            `.trim();
+
+            const blob = new Blob([cardData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'card.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            currentCard = null;
+        }
+
+        function showWarning(id) {
+            document.getElementById(id).classList.add('active');
+            setTimeout(() => {
+                document.getElementById(id).classList.remove('active');
+            }, 3000);
+        }
+
+        function preventDelete(event) {
+            const key = event.key;
+            const keys = ['Backspace', 'Delete'];
+            if (keys.includes(key) && window.getSelection().focusNode.nodeType === 3 && window.getSelection().focusOffset === 0) {
+                event.preventDefault();
+            }
+        }
+
+        function isCardIncomplete(card) {
+            if (!card) return true;
+            return Array.from(card.querySelectorAll('p')).some(p => {
+                const input = p.querySelector('input');
+                const select = p.querySelector('select');
+                return (input && input.value.trim() === '') || (select && select.value === '');
+            });
+        }
+
+        function isAnyCardIncomplete() {
+            const cards = document.querySelectorAll('.card');
+            return Array.from(cards).some(card => isCardIncomplete(card));
+        }
+
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimeout);
+            inactivityTimeout = setTimeout(() => {
+                showWarning('warning-overlay');
+                setTimeout(() => {
+                    if (currentCard) {
+                        currentCard.remove();
+                        currentCard = null;
+                    }
+                    document.getElementById('warning-overlay').classList.remove('active');
+                }, 5000); // 5 secunde
+            }, 180000); // 3 minute
+        }
+
+        function updateCardTitle(h2) {
+            if (h2.innerText.trim() === '') {
+                h2.innerText = 'Name:';
+            }
+        }
+
+        function updateVisitorCounter() {
+            let visitors = localStorage.getItem('visitorCount');
+            if (!visitors) {
+                visitors = 0;
+            }
+            visitors++;
+            localStorage.setItem('visitorCount', visitors);
+            document.getElementById('visitor-counter').innerText = 'Visitors: ' + visitors;
+        }
+
+        updateVisitorCounter();
+    </script>
+</body>
+</html>
